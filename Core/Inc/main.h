@@ -56,6 +56,8 @@ void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
 
+int _write(int file, char *ptr, int len);
+
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
@@ -87,8 +89,8 @@ void Error_Handler(void);
 #define AMP_SD_GPIO_Port GPIOB
 #define R_BUTTON_Pin GPIO_PIN_15
 #define R_BUTTON_GPIO_Port GPIOB
-#define C_BUTTOn_Pin GPIO_PIN_6
-#define C_BUTTOn_GPIO_Port GPIOC
+#define C_BUTTON_Pin GPIO_PIN_6
+#define C_BUTTON_GPIO_Port GPIOC
 #define L_BUTTON_Pin GPIO_PIN_7
 #define L_BUTTON_GPIO_Port GPIOC
 
