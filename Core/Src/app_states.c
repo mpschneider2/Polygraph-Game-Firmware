@@ -53,7 +53,7 @@ void app_states_init() {
 
 	adc_driver_resume_adc(); // start it if not started
 	ppg_processor_start(&player_a_ppg);
-	ppg_processor_start(&player_b_ppg);
+//	ppg_processor_start(&player_b_ppg);
 
 }
 
@@ -65,23 +65,22 @@ void app_states_run() {
 			//ALL READS ARE DONE BY INTERRUPTS!
 			if (player_a_ppg.new_data) {
 				//use sample size of 5
-				__disable_irq();
+//				__disable_irq();
 
-				if (player_a_ppg.idx > 4) {
+				if (player_a_ppg.idx > 9) {
 					uint32_t sum = 0;
-					for (int i = 0; i<5; i++) {
+					for (int i = 0; i<10; i++) {
 						sum += player_a_ppg.data[player_a_ppg.idx-i-1]; //idx points to NEXT slot
 					}
-					uint8_t bpm = 5.0f/(float)sum*1000.0f/60.0f;
-					player_a_ppg.new_data = false;
+					uint16_t bpm = 60000 * 10 / sum;
 
-					__enable_irq();
+//					__enable_irq();
 
-					printf("Beat.\r\n");
 					char bpm_formatted[4];
-					sprintf(bpm_formatted, "%d", bpm);
+					sprintf(bpm_formatted, "%u", bpm);
 					u8g2_DrawStr(&font, 65, 170, bpm_formatted);
 				}
+				player_a_ppg.new_data = false;
 			}
 
 			//HANDLE BUTTON PRESSES

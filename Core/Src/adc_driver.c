@@ -36,7 +36,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
 }
 
 void adc_driver_resume_adc() {
-	HAL_TIM_Base_Start_IT(&htim2);
+	HAL_TIM_Base_Start(&htim2);
 }
 
 void adc_driver_pause_adc() {

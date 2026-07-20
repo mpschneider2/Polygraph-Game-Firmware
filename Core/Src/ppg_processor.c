@@ -10,6 +10,7 @@
 #include "filters.h"
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 void ppg_processor_init(ppg_instance_t * ppg_instance) {
 	memset(ppg_instance->data, 0, sizeof(ppg_instance->data)); // max 200 bpm
@@ -30,15 +31,16 @@ void ppg_processor_run(ppg_instance_t * ppg_instance, uint16_t val) {
 		switch (ppg_instance->state) {
 			case PPG_WAITING:
 				if (HAL_GetTick() - ppg_instance->last_beat < 250) return;
-				float voltage_delta = ppg_instance->filter.filtered_data[ppg_instance->filter.idx]/4095.0f*3.3 - ppg_instance->filter.filtered_data[(ppg_instance->filter.idx-4+MAX_SAMPLES)%MAX_SAMPLES]/4095.0f*3.3; //same as checking slope since we look for fixed period
+				float voltage_delta = ppg_instance->filter.filtered_data[ppg_instance->filter.idx-1]/4095.0f*3.3 - ppg_instance->filter.filtered_data[(ppg_instance->filter.idx-4-1+MAX_SAMPLES)%MAX_SAMPLES]/4095.0f*3.3; //same as checking slope since we look for fixed period. need to check for 20 mV voltage delta in 10ms gap
 				if (voltage_delta < -0.02) {
 					ppg_instance->state = PPG_SEARCHING;
 				}
 				break;
 			case PPG_SEARCHING:
-				uint8_t curr_idx = (ppg_instance->filter.idx+MAX_SAMPLES-1)%MAX_SAMPLES;
-				uint8_t prev_idx = (ppg_instance->filter.idx+MAX_SAMPLES-2)%MAX_SAMPLES;
-				uint8_t next_idx = (ppg_instance->filter.idx);
+				printf("Start searching!\r\n");
+				uint8_t curr_idx = (ppg_instance->filter.idx+MAX_SAMPLES-1-1)%MAX_SAMPLES;
+				uint8_t prev_idx = (ppg_instance->filter.idx+MAX_SAMPLES-2-1)%MAX_SAMPLES;
+				uint8_t next_idx = (ppg_instance->filter.idx-1);
 
 				if (ppg_instance->search_cycles < 80) { // 200ms window / 2.5ms period
 					if (ppg_instance->filter.filtered_data[curr_idx] < ppg_instance->y_mid) {
@@ -67,6 +69,7 @@ void ppg_processor_run(ppg_instance_t * ppg_instance, uint16_t val) {
 				ppg_instance->idx = (ppg_instance->idx + 1)%(BUFFER_LENGTH);
 				ppg_instance->state = PPG_WAITING;
 				ppg_instance->y_mid = UINT16_MAX; // reset to high value
+				printf("Beat.\r\n");
 
 				break;
 			case PPG_DISABLED:
