@@ -1,0 +1,4 @@
+../Core/Src/adc_driver.c:20:6:adc_driver_init	1
+../Core/Src/adc_driver.c:29:6:HAL_ADC_ConvCpltCallback	3
+../Core/Src/adc_driver.c:38:6:adc_driver_resume_adc	1
+../Core/Src/adc_driver.c:42:6:adc_driver_pause_adc	1

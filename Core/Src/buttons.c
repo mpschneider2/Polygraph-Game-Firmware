@@ -20,13 +20,13 @@ void HAL_GPIO_EXTI_Callback (uint16_t GPIO_Pin) {
 		}
 	}
 	if (GPIO_Pin == C_BUTTON_Pin) {
-		if (HAL_GetTick() - last_C_button_pressed > 50) {
+		if (HAL_GetTick() - last_c_button_pressed > 50) {
 			last_c_button_pressed = HAL_GetTick();
 			c_button_pressed = true;
 		}
 	}
 	if (GPIO_Pin == R_BUTTON_Pin) {
-		if (HAL_GetTick() - last_R_button_pressed > 50) {
+		if (HAL_GetTick() - last_r_button_pressed > 50) {
 			last_r_button_pressed = HAL_GetTick();
 			r_button_pressed = true;
 		}

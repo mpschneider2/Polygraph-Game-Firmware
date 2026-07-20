@@ -8,6 +8,8 @@
 #ifndef INC_BUTTONS_H_
 #define INC_BUTTONS_H_
 
+#include <stdbool.h>
+
 //void HAL_GPIO_EXTI_Callback (uint16_t GPIO_Pin);
 bool check_l_button_pressed();
 bool check_r_button_pressed();

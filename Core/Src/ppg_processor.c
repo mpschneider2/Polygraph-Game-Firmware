@@ -9,62 +9,79 @@
 #include "ppg_processor.h"
 #include "filters.h"
 #include <stdlib.h>
+#include <string.h>
 
-void ppg_processor_init(ppg_instance_t ppg_instance) {
-	memset(ppg_instance->data, sizeof(ppg_instance->data)); // max 200 bpm
+void ppg_processor_init(ppg_instance_t * ppg_instance) {
+	memset(ppg_instance->data, 0, sizeof(ppg_instance->data)); // max 200 bpm
 	ppg_instance->idx = 0;
 	ppg_instance->search_cycles = 0;
 	ppg_instance->last_beat = 0;
 	ppg_instance->state = PPG_DISABLED;
-	filter_init_FIR(ppg_instance->filter);
-	yleft = y_mid = y_right = 0;
-	lowest_time = 0;
-	last_beat = 0;
+	filter_init_FIR(&(ppg_instance->filter));
+	ppg_instance->y_left = ppg_instance->y_mid = ppg_instance->y_right = UINT16_MAX;
+	ppg_instance->lowest_time = 0;
+	ppg_instance->last_beat = 0;
 
 }
-void ppg_processor_run(ppg_instance_t ppg_instance, uint16_t val) {
+void ppg_processor_run(ppg_instance_t * ppg_instance, uint16_t val) {
 
 	if (ppg_instance->state != PPG_DISABLED) {
-		filter_update_FIR(ppg_instance->filter, val);
+		filter_update_FIR(&ppg_instance->filter, val);
 		switch (ppg_instance->state) {
 			case PPG_WAITING:
-				float voltage_delta = ppg_instance->filter->filtered_data[ppg_instance->filter->idx]/4095.0f*3.3 - ppg_instance->filter->filtered_data[(ppg_instance->filter->idx-4+MAX_SAMPLES)%MAX_SAMPLES]/4095.0f*3.3; //same as checking slope since we look for fixed period
+				if (HAL_GetTick() - ppg_instance->last_beat < 250) return;
+				float voltage_delta = ppg_instance->filter.filtered_data[ppg_instance->filter.idx]/4095.0f*3.3 - ppg_instance->filter.filtered_data[(ppg_instance->filter.idx-4+MAX_SAMPLES)%MAX_SAMPLES]/4095.0f*3.3; //same as checking slope since we look for fixed period
 				if (voltage_delta < -0.02) {
 					ppg_instance->state = PPG_SEARCHING;
 				}
 				break;
 			case PPG_SEARCHING:
-				uint8_t curr_idx = (ppg_instance->filter->idx+MAX_SAMPLES-1)%MAX_SAMPLES;
-				uint8_t prev_idx = (ppg_instance->filter->idx+MAX_SAMPLES-2)%MAX_SAMPLES;
-				uint8_t next_idx = (ppg_instance->filter->idx);
+				uint8_t curr_idx = (ppg_instance->filter.idx+MAX_SAMPLES-1)%MAX_SAMPLES;
+				uint8_t prev_idx = (ppg_instance->filter.idx+MAX_SAMPLES-2)%MAX_SAMPLES;
+				uint8_t next_idx = (ppg_instance->filter.idx);
 
-				if (ppg_instance->search_cycles < 100) {
-					if (ppg_instance->filter->filtered_data[curr_idx] < ppg_instance->y_mid) {
-						ppg_instance->y_mid = ppg_instance->filter->filtered_data[curr_idx];
-						ppg_instance->y_left = ppg_instance->filter->filtered_data[prev_idx];
-						ppg_instance->y_right = ppg_instance->filter->filtered_data[next_idx];
+				if (ppg_instance->search_cycles < 80) { // 200ms window / 2.5ms period
+					if (ppg_instance->filter.filtered_data[curr_idx] < ppg_instance->y_mid) {
+						ppg_instance->y_mid = ppg_instance->filter.filtered_data[curr_idx];
+						ppg_instance->y_left = ppg_instance->filter.filtered_data[prev_idx];
+						ppg_instance->y_right = ppg_instance->filter.filtered_data[next_idx];
 
 						ppg_instance->lowest_time = HAL_GetTick();
 					}
-					search_cycles++;
+					ppg_instance->search_cycles++;
 				} else {
 					ppg_instance->search_cycles = 0;
 					ppg_instance->state = PPG_CALCULATING;
 				}
 				break;
 			case PPG_CALCULATING:
-				float
+				uint32_t new_time;
+				if (2*ppg_instance->y_mid - ppg_instance->y_left - ppg_instance->y_right > 0) {
+					new_time = ppg_instance->lowest_time + ((float) ppg_instance->y_right - (float) ppg_instance->y_left)/2.0f/(2.0f*ppg_instance->y_mid - (float) ppg_instance->y_left - (float) ppg_instance->y_right)*SAMPLE_PERIOD;
+				} else {
+					new_time = ppg_instance->lowest_time;
+				}
+				ppg_instance->data[ppg_instance->idx] = new_time - ppg_instance->last_beat;
+				ppg_instance->last_beat = new_time;
+				ppg_instance->new_data = true;
+				ppg_instance->idx = (ppg_instance->idx + 1)%(BUFFER_LENGTH);
+				ppg_instance->state = PPG_WAITING;
+				ppg_instance->y_mid = UINT16_MAX; // reset to high value
+
+				break;
+			case PPG_DISABLED:
+				return;
 
 		}
 	}
 
 }
 
-void ppg_processor_start(ppg_instance_t ppg_instance) {
+void ppg_processor_start(ppg_instance_t * ppg_instance) {
 	ppg_instance->state = PPG_WAITING;
 }
 
-void ppg_processor_stop(ppg_instance_t ppg_instance) {
+void ppg_processor_stop(ppg_instance_t * ppg_instance) {
 	ppg_instance->state = PPG_DISABLED;
 }
 

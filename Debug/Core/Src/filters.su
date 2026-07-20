@@ -1,0 +1,2 @@
+../Core/Src/filters.c:11:6:filter_init_FIR	16	static
+../Core/Src/filters.c:18:6:filter_update_FIR	16	static

@@ -1,0 +1,4 @@
+../Core/Src/ppg_processor.c:14:6:ppg_processor_init	1
+../Core/Src/ppg_processor.c:26:6:ppg_processor_run	10
+../Core/Src/ppg_processor.c:80:6:ppg_processor_start	1
+../Core/Src/ppg_processor.c:84:6:ppg_processor_stop	1
