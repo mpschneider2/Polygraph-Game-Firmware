@@ -9,6 +9,7 @@ C_SRCS += \
 ../Core/Src/adc_driver.c \
 ../Core/Src/app_states.c \
 ../Core/Src/buttons.c \
+../Core/Src/data_processing.c \
 ../Core/Src/filters.c \
 ../Core/Src/gc9a01a.c \
 ../Core/Src/main.c \
@@ -25,6 +26,7 @@ OBJS += \
 ./Core/Src/adc_driver.o \
 ./Core/Src/app_states.o \
 ./Core/Src/buttons.o \
+./Core/Src/data_processing.o \
 ./Core/Src/filters.o \
 ./Core/Src/gc9a01a.o \
 ./Core/Src/main.o \
@@ -41,6 +43,7 @@ C_DEPS += \
 ./Core/Src/adc_driver.d \
 ./Core/Src/app_states.d \
 ./Core/Src/buttons.d \
+./Core/Src/data_processing.d \
 ./Core/Src/filters.d \
 ./Core/Src/gc9a01a.d \
 ./Core/Src/main.d \
@@ -60,7 +63,7 @@ Core/Src/%.o Core/Src/%.su Core/Src/%.cyclo: ../Core/Src/%.c Core/Src/subdir.mk
 clean: clean-Core-2f-Src
 
 clean-Core-2f-Src:
-	-$(RM) ./Core/Src/U8g2_for_Adafruit_GFX.cyclo ./Core/Src/U8g2_for_Adafruit_GFX.d ./Core/Src/U8g2_for_Adafruit_GFX.o ./Core/Src/U8g2_for_Adafruit_GFX.su ./Core/Src/adc_driver.cyclo ./Core/Src/adc_driver.d ./Core/Src/adc_driver.o ./Core/Src/adc_driver.su ./Core/Src/app_states.cyclo ./Core/Src/app_states.d ./Core/Src/app_states.o ./Core/Src/app_states.su ./Core/Src/buttons.cyclo ./Core/Src/buttons.d ./Core/Src/buttons.o ./Core/Src/buttons.su ./Core/Src/filters.cyclo ./Core/Src/filters.d ./Core/Src/filters.o ./Core/Src/filters.su ./Core/Src/gc9a01a.cyclo ./Core/Src/gc9a01a.d ./Core/Src/gc9a01a.o ./Core/Src/gc9a01a.su ./Core/Src/main.cyclo ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/ppg_processor.cyclo ./Core/Src/ppg_processor.d ./Core/Src/ppg_processor.o ./Core/Src/ppg_processor.su ./Core/Src/stm32l4xx_hal_msp.cyclo ./Core/Src/stm32l4xx_hal_msp.d ./Core/Src/stm32l4xx_hal_msp.o ./Core/Src/stm32l4xx_hal_msp.su ./Core/Src/stm32l4xx_it.cyclo ./Core/Src/stm32l4xx_it.d ./Core/Src/stm32l4xx_it.o ./Core/Src/stm32l4xx_it.su ./Core/Src/syscalls.cyclo ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.cyclo ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32l4xx.cyclo ./Core/Src/system_stm32l4xx.d ./Core/Src/system_stm32l4xx.o ./Core/Src/system_stm32l4xx.su ./Core/Src/u8g2_fonts.cyclo ./Core/Src/u8g2_fonts.d ./Core/Src/u8g2_fonts.o ./Core/Src/u8g2_fonts.su
+	-$(RM) ./Core/Src/U8g2_for_Adafruit_GFX.cyclo ./Core/Src/U8g2_for_Adafruit_GFX.d ./Core/Src/U8g2_for_Adafruit_GFX.o ./Core/Src/U8g2_for_Adafruit_GFX.su ./Core/Src/adc_driver.cyclo ./Core/Src/adc_driver.d ./Core/Src/adc_driver.o ./Core/Src/adc_driver.su ./Core/Src/app_states.cyclo ./Core/Src/app_states.d ./Core/Src/app_states.o ./Core/Src/app_states.su ./Core/Src/buttons.cyclo ./Core/Src/buttons.d ./Core/Src/buttons.o ./Core/Src/buttons.su ./Core/Src/data_processing.cyclo ./Core/Src/data_processing.d ./Core/Src/data_processing.o ./Core/Src/data_processing.su ./Core/Src/filters.cyclo ./Core/Src/filters.d ./Core/Src/filters.o ./Core/Src/filters.su ./Core/Src/gc9a01a.cyclo ./Core/Src/gc9a01a.d ./Core/Src/gc9a01a.o ./Core/Src/gc9a01a.su ./Core/Src/main.cyclo ./Core/Src/main.d ./Core/Src/main.o ./Core/Src/main.su ./Core/Src/ppg_processor.cyclo ./Core/Src/ppg_processor.d ./Core/Src/ppg_processor.o ./Core/Src/ppg_processor.su ./Core/Src/stm32l4xx_hal_msp.cyclo ./Core/Src/stm32l4xx_hal_msp.d ./Core/Src/stm32l4xx_hal_msp.o ./Core/Src/stm32l4xx_hal_msp.su ./Core/Src/stm32l4xx_it.cyclo ./Core/Src/stm32l4xx_it.d ./Core/Src/stm32l4xx_it.o ./Core/Src/stm32l4xx_it.su ./Core/Src/syscalls.cyclo ./Core/Src/syscalls.d ./Core/Src/syscalls.o ./Core/Src/syscalls.su ./Core/Src/sysmem.cyclo ./Core/Src/sysmem.d ./Core/Src/sysmem.o ./Core/Src/sysmem.su ./Core/Src/system_stm32l4xx.cyclo ./Core/Src/system_stm32l4xx.d ./Core/Src/system_stm32l4xx.o ./Core/Src/system_stm32l4xx.su ./Core/Src/u8g2_fonts.cyclo ./Core/Src/u8g2_fonts.d ./Core/Src/u8g2_fonts.o ./Core/Src/u8g2_fonts.su
 
 .PHONY: clean-Core-2f-Src
 

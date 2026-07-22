@@ -15,8 +15,8 @@
 
 app_state_t current_app_state = APP_RECORDING;
 
-ppg_instance_t player_a_ppg;
-ppg_instance_t player_b_ppg;
+static ppg_instance_t player_a_ppg;
+static ppg_instance_t player_b_ppg;
 
 extern SPI_HandleTypeDef hspi1;
 
