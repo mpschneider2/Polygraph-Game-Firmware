@@ -66,7 +66,7 @@ void ppg_processor_run(ppg_instance_t * ppg_instance, uint16_t val) {
 				ppg_instance->data[ppg_instance->idx] = new_time - ppg_instance->last_beat;
 				ppg_instance->last_beat = new_time;
 				ppg_instance->new_data = true;
-				ppg_instance->idx = (ppg_instance->idx + 1)%(BUFFER_LENGTH);
+				ppg_instance->idx = (ppg_instance->idx + 1)%(BUFFER_LENGTH); //rewrites instead of overflow
 				ppg_instance->state = PPG_WAITING;
 				ppg_instance->y_mid = UINT16_MAX; // reset to high value
 				printf("Beat.\r\n");

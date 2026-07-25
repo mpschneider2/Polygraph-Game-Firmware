@@ -36,7 +36,9 @@ Core/Src/gc9a01a.o: ../Core/Src/gc9a01a.c ../Core/Inc/gc9a01a.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h \
- ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h
+ ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h \
+ ../Core/Inc/U8g2_for_Adafruit_GFX.h ../Core/Inc/u8g2_fonts.h \
+ ../Core/Inc/gc9a01a.h ../Core/Inc/u8g2_fonts.h ../Core/Inc/main.h
 ../Core/Inc/gc9a01a.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h:
 ../Core/Inc/stm32l4xx_hal_conf.h:
@@ -76,3 +78,8 @@ Core/Src/gc9a01a.o: ../Core/Src/gc9a01a.c ../Core/Inc/gc9a01a.h \
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h:
+../Core/Inc/U8g2_for_Adafruit_GFX.h:
+../Core/Inc/u8g2_fonts.h:
+../Core/Inc/gc9a01a.h:
+../Core/Inc/u8g2_fonts.h:
+../Core/Inc/main.h:

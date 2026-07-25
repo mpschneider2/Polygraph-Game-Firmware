@@ -1,4 +1,5 @@
-Core/Src/app_states.o: ../Core/Src/app_states.c ../Core/Inc/main.h \
+Core/Src/gsr.o: ../Core/Src/gsr.c ../Core/Inc/gsr.h \
+ ../Core/Inc/game_constants.h ../Core/Inc/main.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h \
  ../Core/Inc/stm32l4xx_hal_conf.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_rcc.h \
@@ -37,11 +38,9 @@ Core/Src/app_states.o: ../Core/Src/app_states.c ../Core/Inc/main.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h \
- ../Core/Inc/app_states.h ../Core/Inc/gc9a01a.h ../Core/Inc/adc_driver.h \
- ../Core/Inc/ppg_processor.h ../Core/Inc/filters.h \
- ../Core/Inc/game_constants.h ../Core/Inc/U8g2_for_Adafruit_GFX.h \
- ../Core/Inc/u8g2_fonts.h ../Core/Inc/gc9a01a.h ../Core/Inc/buttons.h \
- ../Core/Inc/gsr.h ../Core/Inc/main.h ../Core/Inc/game_constants.h
+ ../Core/Inc/main.h
+../Core/Inc/gsr.h:
+../Core/Inc/game_constants.h:
 ../Core/Inc/main.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h:
 ../Core/Inc/stm32l4xx_hal_conf.h:
@@ -81,16 +80,4 @@ Core/Src/app_states.o: ../Core/Src/app_states.c ../Core/Inc/main.h \
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_tim_ex.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h:
-../Core/Inc/app_states.h:
-../Core/Inc/gc9a01a.h:
-../Core/Inc/adc_driver.h:
-../Core/Inc/ppg_processor.h:
-../Core/Inc/filters.h:
-../Core/Inc/game_constants.h:
-../Core/Inc/U8g2_for_Adafruit_GFX.h:
-../Core/Inc/u8g2_fonts.h:
-../Core/Inc/gc9a01a.h:
-../Core/Inc/buttons.h:
-../Core/Inc/gsr.h:
 ../Core/Inc/main.h:
-../Core/Inc/game_constants.h:

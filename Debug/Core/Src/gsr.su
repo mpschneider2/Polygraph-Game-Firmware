@@ -1,0 +1,4 @@
+../Core/Src/gsr.c:14:6:gsr_init	16	static
+../Core/Src/gsr.c:20:6:gsr_run	16	static
+../Core/Src/gsr.c:35:6:gsr_start	16	static
+../Core/Src/gsr.c:39:6:gsr_stop	16	static

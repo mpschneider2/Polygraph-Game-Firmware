@@ -605,15 +605,17 @@ void u8g2_SetDisplay(u8g2_font_t *u8g2, GC9A01A *gc9) {
 	u8g2->tft = gc9;
 }
 
-//========================================================
+uint16_t u8g2_string_width(u8g2_font_t * u8g2, const char * str) {
+//	uint16_t = strlen(str);
+	char * e = &str[0];
+	uint16_t w, dx = 0;
 
+	while (*e != '\0') {
+		dx = u8g2_GetGlyphWidth(u8g2, (uint16_t) e);
+		w += dx;
+		e++;
+	}
 
-/*
-  pass a byte from an utf8 encoded string to the utf8 decoder state machine
-  returns 
-    0x0fffe: no glyph, just continue
-    0x0ffff: end of string
-    anything else: The decoded encoding
-*/
+	return w;
 
-
+}

@@ -6,6 +6,11 @@
  */
 
 #include "gc9a01a.h"
+#include "U8g2_for_Adafruit_GFX.h"
+#include "u8g2_fonts.h"
+#include <string.h>
+#include "main.h"
+#include <stdio.h>
 
 
 
@@ -225,3 +230,22 @@ void GC9A01A_drawFastVLine(GC9A01A *tft,uint16_t x,uint16_t y,uint16_t len, uint
 
 }
 
+void GC9A01A_Draw_Str(const char * str, GC9A01A * tft, uint16_t x, uint16_t y, const uint8_t * font, uint16_t color_txt, uint16_t color_bg, uint16_t clearwidth) {
+	u8g2_font_t font_handle;
+
+	printf("displaying: \"%s\"\r\n", str);
+
+	memset(&font_handle, 0, sizeof(font_handle));
+	u8g2_SetDisplay(&font_handle, tft);
+	u8g2_SetFont(&font_handle, font); // CHANGE!!
+	u8g2_SetForegroundColor(&font_handle, color_txt); // black
+	u8g2_SetBackgroundColor(&font_handle, color_bg); // white
+	u8g2_SetFontMode(&font_handle, 0); //faster to be nontransparent WITHOUT framebuffer
+	u8g2_SetFontDirection(&font_handle, 0); // try 0 if doesn't work
+	u8g2_SetBackgroundColor(&font_handle, color_bg);
+
+
+	GC9A01A_fill_rect(tft, x, y-font_handle.font_info.max_char_height-font_handle.font_info.y_offset, clearwidth /*u8g2_string_width(&font_handle, str)*/, font_handle.font_info.max_char_height+font_handle.font_info.y_offset+1, color_bg); // unlike u8g2 that writes UPWARD, this clears DOWN
+	u8g2_DrawStr(&font_handle, x, y, str);
+
+}

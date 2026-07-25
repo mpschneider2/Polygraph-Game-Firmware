@@ -15,5 +15,7 @@ bool check_l_button_pressed();
 bool check_r_button_pressed();
 bool check_c_button_pressed();
 
+void clearButtons();
+
 
 #endif /* INC_BUTTONS_H_ */

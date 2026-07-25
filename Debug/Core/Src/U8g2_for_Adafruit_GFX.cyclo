@@ -26,3 +26,4 @@
 ../Core/Src/U8g2_for_Adafruit_GFX.c:594:6:u8g2_SetForegroundColor	1
 ../Core/Src/U8g2_for_Adafruit_GFX.c:599:6:u8g2_SetBackgroundColor	1
 ../Core/Src/U8g2_for_Adafruit_GFX.c:604:6:u8g2_SetDisplay	1
+../Core/Src/U8g2_for_Adafruit_GFX.c:608:10:u8g2_string_width	2

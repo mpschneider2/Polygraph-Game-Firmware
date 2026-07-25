@@ -89,10 +89,13 @@ int _write(int file, char *ptr, int len);
 #define AMP_SD_GPIO_Port GPIOB
 #define R_BUTTON_Pin GPIO_PIN_15
 #define R_BUTTON_GPIO_Port GPIOB
+#define R_BUTTON_EXTI_IRQn EXTI15_10_IRQn
 #define C_BUTTON_Pin GPIO_PIN_6
 #define C_BUTTON_GPIO_Port GPIOC
+#define C_BUTTON_EXTI_IRQn EXTI9_5_IRQn
 #define L_BUTTON_Pin GPIO_PIN_7
 #define L_BUTTON_GPIO_Port GPIOC
+#define L_BUTTON_EXTI_IRQn EXTI9_5_IRQn
 
 /* USER CODE BEGIN Private defines */
 

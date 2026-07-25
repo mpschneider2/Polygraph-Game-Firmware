@@ -10,8 +10,10 @@
 
 #include "filters.h"
 #include <stdbool.h>
+#include "game_constants.h"
 
-#define MAX_DURATION 5 //in minutes
+//#define MAX_DURATION 5 //in minutes
+// now defined in game_constants.h
 #define SAMPLE_PERIOD 2.5 // in millis
 #define BUFFER_LENGTH (MAX_DURATION * 200) // max 200 bpm
 

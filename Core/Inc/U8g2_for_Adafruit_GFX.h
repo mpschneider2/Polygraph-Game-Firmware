@@ -133,6 +133,7 @@ void u8g2_SetFont(u8g2_font_t *u8g2, const uint8_t  *font);
 void u8g2_SetForegroundColor(u8g2_font_t *u8g2, uint16_t fg);
 void u8g2_SetBackgroundColor(u8g2_font_t *u8g2, uint16_t bg);
 void u8g2_SetDisplay(u8g2_font_t *u8g2, GC9A01A *gc9);
+uint16_t u8g2_string_width(u8g2_font_t * u8g2, const char * str);
 
 
 /*==========================================*/

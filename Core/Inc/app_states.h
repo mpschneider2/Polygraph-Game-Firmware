@@ -9,7 +9,10 @@
 #define INC_APP_STATES_H_
 
 typedef enum {
-	APP_RECORDING
+	APP_SPLASH,
+	APP_RECORDING,
+	APP_CALCULATING,
+	APP_RESULTS
 } app_state_t;
 
 void app_states_init();

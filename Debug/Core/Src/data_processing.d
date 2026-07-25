@@ -38,7 +38,7 @@ Core/Src/data_processing.o: ../Core/Src/data_processing.c \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart.h \
  ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal_uart_ex.h \
  ../Core/Inc/data_processing.h ../Core/Inc/ppg_processor.h \
- ../Core/Inc/filters.h
+ ../Core/Inc/filters.h ../Core/Inc/game_constants.h
 ../Core/Inc/main.h:
 ../Drivers/STM32L4xx_HAL_Driver/Inc/stm32l4xx_hal.h:
 ../Core/Inc/stm32l4xx_hal_conf.h:
@@ -81,3 +81,4 @@ Core/Src/data_processing.o: ../Core/Src/data_processing.c \
 ../Core/Inc/data_processing.h:
 ../Core/Inc/ppg_processor.h:
 ../Core/Inc/filters.h:
+../Core/Inc/game_constants.h:

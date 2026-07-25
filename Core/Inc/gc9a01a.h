@@ -268,6 +268,6 @@ void GC9A01A_fill(GC9A01A *tft, uint16_t color);
 void GC9A01A_drawFastVLine(GC9A01A *tft,uint16_t x,uint16_t y,uint16_t len, uint16_t color);
 void GC9A01A_drawFastHLine(GC9A01A *tft,uint16_t x,uint16_t y,uint16_t len, uint16_t colorr);
 
-
+void GC9A01A_Draw_Str(const char * str, GC9A01A * tft, uint16_t x, uint16_t y, const uint8_t * font, uint16_t color_txt, uint16_t color_bg, uint16_t clearwidth);
 
 #endif /* INC_GC9A01A_H_ */
