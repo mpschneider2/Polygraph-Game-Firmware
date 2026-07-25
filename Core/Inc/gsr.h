@@ -13,9 +13,10 @@
 #include <stdbool.h>
 
 #define gsr_sample_rate 1 //in hertz. 1 is a good starting point, may need to increase later... but that involves modifying DTW algorithm
+#define extra_samples 5// add a little buffer so there's no race condition before overwriting so that idx can still be used to calculate everything if time is shortened
 
 typedef struct {
-	uint16_t data[gsr_sample_rate*60*MAX_DURATION]; // set for 5 min sample time
+	uint16_t data[gsr_sample_rate*60*MAX_DURATION+extra_samples]; // set for 5 min sample time
 	bool enabled;
 	uint16_t counter; // used in downsampling
 	uint16_t idx;

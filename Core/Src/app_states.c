@@ -30,6 +30,8 @@ static uint16_t countdown_secs = MAX_DURATION*60; // mins to secs
 
 extern SPI_HandleTypeDef hspi1;
 
+extern TIM_HandleTypeDef htim16;
+
 GC9A01A tft1;
 u8g2_font_t font;
 
@@ -47,13 +49,9 @@ void app_states_init() {
 	  	  LCD_RESET_GPIO_Port, LCD_RESET_Pin
 	    );
 
+	HAL_TIM_PWM_Start(&htim16, GPIO_PIN_8);
 
 	adc_driver_init(&player_a_ppg, &player_b_ppg, &player_a_gsr, &player_b_gsr);
-	ppg_processor_init(&player_a_ppg);
-	ppg_processor_init(&player_b_ppg);
-	gsr_init(&player_a_gsr);
-	gsr_init(&player_b_gsr);
-
 }
 
 void app_states_run() {
@@ -68,6 +66,12 @@ void app_states_run() {
 	switch (current_app_state) {
 		case APP_SPLASH:
 			if (state_updated) {
+
+				ppg_processor_init(&player_a_ppg);
+				ppg_processor_init(&player_b_ppg);
+				gsr_init(&player_a_gsr);
+				gsr_init(&player_b_gsr);
+
 				GC9A01A_fill(&tft1, GC9A01A_OLIVE);
 				GC9A01A_Draw_Str("START", &tft1, 55, 141, u8g2_font_logisoso42_tr, GC9A01A_BLACK, GC9A01A_OLIVE, 100); // u8g2_font_tenthinnerguys_tu will be good for tiny text.
 				state_updated = false;
@@ -184,6 +188,36 @@ void app_states_run() {
 			}
 
 			break;
+		case APP_CALCULATING:
+			//check amount of data or return error
+			if (state_updated) {
+				if (player_a_ppg.idx < 40 || player_b_ppg.idx < 40 || player_a_gsr.idx < 60 || player_b_gsr.idx < 60) {
+					//not enough data!
+					GC9A01A_fill(&tft1, GC9A01A_OLIVE);
+					GC9A01A_Draw_Str("Not enough data.", &tft1, 40, 60, u8g2_font_logisoso16_tr, GC9A01A_BLACK, GC9A01A_OLIVE, 0);
+					GC9A01A_Draw_Str("Please play again.", &tft1, 40, 80, u8g2_font_logisoso16_tr, GC9A01A_BLACK, GC9A01A_OLIVE, 0);
+					GC9A01A_Draw_Str("Ensure heart rate sensor", &tft1, 8, 100, u8g2_font_logisoso16_tr, GC9A01A_BLACK, GC9A01A_OLIVE, 0);
+					GC9A01A_Draw_Str("is reading fingers.", &tft1, 8, 120, u8g2_font_logisoso16_tr, GC9A01A_BLACK, GC9A01A_OLIVE, 0);
+					GC9A01A_Draw_Str("Ensure both fingers are", &tft1, 8, 140, u8g2_font_logisoso16_tr, GC9A01A_BLACK, GC9A01A_OLIVE, 0);
+					GC9A01A_Draw_Str("in good contact with pads.", &tft1, 8, 160, u8g2_font_logisoso16_tr, GC9A01A_BLACK, GC9A01A_OLIVE, 0);
+
+				}  else {
+					GC9A01A_fill(&tft1, GC9A01A_OLIVE);
+					GC9A01A_Draw_Str("Calculating...", &tft1, 40, 60, u8g2_font_logisoso16_tr, GC9A01A_BLACK, GC9A01A_OLIVE, 0);
+									//else enough data, proceed with calculations!
+				}
+
+				state_updated = false;
+				break;
+			} else {
+				//shouldn't be here ngl. Throwing error message above.
+				if (l_pressed || c_pressed || r_pressed) {
+					printf("button pressed\r\n");
+					clearButtons();
+					state_updated = true;
+					current_app_state = APP_SPLASH;
+				}
+			}
 	}
 }
 
