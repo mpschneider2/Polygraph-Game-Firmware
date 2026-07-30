@@ -371,6 +371,8 @@ static void MX_SDMMC1_SD_Init(void)
 
   /* USER CODE BEGIN SDMMC1_Init 0 */
 
+	//THIS CODE DOESN'T MATTER ANYMORE!!!! LOOK AT CODE IN sd_util.c
+
   /* USER CODE END SDMMC1_Init 0 */
 
   /* USER CODE BEGIN SDMMC1_Init 1 */
@@ -379,11 +381,17 @@ static void MX_SDMMC1_SD_Init(void)
   hsd1.Instance = SDMMC1;
   hsd1.Init.ClockEdge = SDMMC_CLOCK_EDGE_RISING;
   hsd1.Init.ClockBypass = SDMMC_CLOCK_BYPASS_DISABLE;
-  hsd1.Init.ClockPowerSave = SDMMC_CLOCK_POWER_SAVE_DISABLE;
+  hsd1.Init.ClockPowerSave = SDMMC_CLOCK_POWER_SAVE_ENABLE;
   hsd1.Init.BusWide = SDMMC_BUS_WIDE_1B;
   hsd1.Init.HardwareFlowControl = SDMMC_HARDWARE_FLOW_CONTROL_DISABLE;
-  hsd1.Init.ClockDiv = 0;
+  hsd1.Init.ClockDiv = 2;
   /* USER CODE BEGIN SDMMC1_Init 2 */
+
+  if (HAL_SD_Init(&hsd1) != HAL_OK) {
+      printf("SDIO init failed.\r\n");
+  } else {
+	  printf("Successfully initialized SDIO\r\n");
+  }
 
   /* USER CODE END SDMMC1_Init 2 */
 
@@ -671,6 +679,8 @@ static void MX_GPIO_Init(void)
 void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
+
+	return; //don't block upon uSD failure to mount!!
   /* User can add his own implementation to report the HAL error return state */
   __disable_irq();
   while (1)

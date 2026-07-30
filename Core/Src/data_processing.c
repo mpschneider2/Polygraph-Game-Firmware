@@ -10,38 +10,43 @@
 #include "ppg_processor.h"
 #include <string.h>
 #include <math.h>
+#include "fatfs.h"
 
-float data_processing_calc_mean(uint16_t * arr, uint16_t n) {
+double data_processing_calc_mean(const float * arr, uint16_t n) {
 	if (n == 0) return 0.0f; // handle empty array case
 
-	float new_avg = (float) arr[0];
-	for (int i = 1; i < n; i++) {
-		new_avg = new_avg + ((float) arr[i]-new_avg)/((float)(i+1));
+	double sum = 0;
+
+	for (int i = 0; i < n; i++) {
+		sum += arr[i];
 	}
-	return new_avg;
+	return sum/n;
 }
 
-float data_processing_calc_stdev(uint16_t * arr, uint16_t n, float * mean_pointer) { //sample, not population
-	float mean = data_processing_calc_mean(arr, n);
+double data_processing_calc_stdev(const float * arr, uint16_t n, double * mean_pointer) { //sample, not population
+	double mean = data_processing_calc_mean(arr, n);
 	if (mean_pointer != NULL) *mean_pointer = mean; // avoid calculating mean multiple times for normalization algorithm
 
 	if (n<=1) return 0;// divide by 0 error
 
-	float variance = 0;
+	double variance = 0;
 	for (int i = 0; i < n; i++) {
-		float diff = ((float) arr[i] - mean);
+		double diff = ((double) arr[i] - mean);
 		variance += diff * diff;
 	}
-	float stdevs = sqrtf(variance/(n-1));
+	double stdevs = sqrt(variance/(n-1));
 	return stdevs;
 }
 
-void data_processing_normalize(uint16_t * source_arr, float * dest_arr, uint16_t n) {
-	float mean;
-	float stdevs = data_processing_calc_stdev(source_arr, n, &mean);
+void data_processing_normalize(float * source_arr, float * dest_arr, uint16_t n) {
+	double mean;
+
+	if (dest_arr == NULL) dest_arr = source_arr; // pass null to normalize in place
+
+	double stdevs = data_processing_calc_stdev(source_arr, n, &mean);
 	if (stdevs > 0.0001f) { // prevent divide by 0
 		for (int i = 0; i < n; i++) {
-			dest_arr[i] = ((float)source_arr[i] - mean) / stdevs;
+			dest_arr[i] = ((float)source_arr[i] - mean) / (float) stdevs;
 		}
 	} else {
 		// center if zero variance
@@ -51,11 +56,55 @@ void data_processing_normalize(uint16_t * source_arr, float * dest_arr, uint16_t
 	}
 }
 
-uint16_t data_processing_calculate_range(const uint16_t * arr, uint16_t n) {
-	uint16_t max = arr[0];
-	uint16_t min = arr[0];
+double data_processing_calc_mean_d(const uint16_t * arr, uint16_t n) {
+	if (n == 0) return 0.0f; // handle empty array case
 
+	double sum = 0;
+
+	for (int i = 0; i < n; i++) {
+		sum += (double)arr[i];
+	}
+	return sum/n;
+}
+
+double data_processing_calc_stdev_d(const uint16_t * arr, uint16_t n, double * mean_pointer) { //sample, not population
+	double mean = data_processing_calc_mean_d(arr, n);
+	if (mean_pointer != NULL) *mean_pointer = mean; // avoid calculating mean multiple times for normalization algorithm. Pass null if don't care about mean
+
+	if (n<=1) return 0;// divide by 0 error
+
+	double variance = 0;
+	for (int i = 0; i < n; i++) {
+		double diff = ((double) arr[i] - mean);
+		variance += diff * diff;
+	}
+	double stdevs = sqrt(variance/(n-1));
+	return stdevs;
+}
+
+void data_processing_normalize_d(uint16_t * source_arr, float * dest_arr, uint16_t n) {
+	double mean;
+
+	if (dest_arr == NULL) return; // cannot normalize in place with integers.
+
+	double stdevs = data_processing_calc_stdev_d(source_arr, n, &mean);
+	if (stdevs > 0.0001f) { // prevent divide by 0
+		for (int i = 0; i < n; i++) {
+			dest_arr[i] = ((float)source_arr[i] - mean) / (float) stdevs;
+		}
+	} else {
+		// center if zero variance
+		for (int i = 0; i < n; i++) {
+			dest_arr[i] = 0.0f;
+		}
+	}
+}
+
+float data_processing_calc_range(const float * arr, uint16_t n) {
 	if (arr == NULL || n == 0) return 0;
+
+	float max = arr[0];
+	float min = arr[0];
 
 	for (int i = 1; i < n; i++) {
 		if (arr[i] > max) max = arr[i];
@@ -65,7 +114,7 @@ uint16_t data_processing_calculate_range(const uint16_t * arr, uint16_t n) {
 	return max-min;
 }
 
-void data_processing_calc_1hz_hrv(uint16_t * ibis, uint16_t n, float * RMSSD, uint16_t * out_n) {
+void data_processing_calc_1hz_hrv(const uint16_t * ibis, uint16_t n, float * RMSSD, uint16_t * out_n) {
 	uint32_t abs_times[BUFFER_LENGTH]; // consider making static
 
 
@@ -133,7 +182,7 @@ float dist(float a, float b) {
 	return fabsf(a-b);
 }
 
-float data_processing_DTW(float * arr_a, float * arr_b, uint16_t a_n, uint16_t b_n) {
+float data_processing_DTW(const float * arr_a, const float * arr_b, uint16_t a_n, uint16_t b_n) {
 	//ASSUMPTIONS:
 	// - a and b are close-ish to the same length
 	// - data is manually normalized first
@@ -149,7 +198,7 @@ float data_processing_DTW(float * arr_a, float * arr_b, uint16_t a_n, uint16_t b
 
 	if (a_n < 50 || b_n < 50) return INFINITY; //not enough data to do effectively
 
-	uint16_t col_offset = 0; //start at 1 since r2 starts offset from r1 by 1
+	int col_offset = 0; //start at 1 since r2 starts offset from r1 by 1
 
 	#define MATRIX_SZ (2*SAKOE_CHIBA_BAND+1+2) // on either side centered at middle, plus infinities
 
@@ -172,8 +221,8 @@ float data_processing_DTW(float * arr_a, float * arr_b, uint16_t a_n, uint16_t b
 
 		//because we are inheriting from row below which is initialized to infinity and we expand right one by one, don't need to set right bound
 		cost_r2[min(MATRIX_SZ-1 /*final index 1 less than len*/,col_offset+SAKOE_CHIBA_BAND)] = INFINITY; // initialize outer bounds to infinity; should
-		uint16_t offset = max(col_offset - SAKOE_CHIBA_BAND, 0); //effective offset of start
-		for (x = 1; x < min(min(col_offset+SAKOE_CHIBA_BAND, MATRIX_SZ - 1), a_n - offset+1); x++) { //x tracks array x value, not actual value// increment up until last infinity value.
+		int offset = max(col_offset - SAKOE_CHIBA_BAND, 0); //effective offset of start
+		for (x = 1; x < min(min(col_offset+SAKOE_CHIBA_BAND+1/*add 1 or 2, don't know because should be inclusive of last val AND infinity*/, MATRIX_SZ - 1 /*leave room for one infinity*/), (int) a_n - offset+1); x++) { //x tracks array x value, not actual value// increment up until last infinity value.
 
 			uint16_t a_idx = x - 1 + offset;
 			uint16_t b_idx = y - 1; // x and y are 0-indexed

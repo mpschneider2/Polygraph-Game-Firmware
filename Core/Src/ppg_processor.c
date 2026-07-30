@@ -30,9 +30,9 @@ void ppg_processor_run(ppg_instance_t * ppg_instance, uint16_t val) {
 		filter_update_FIR(&ppg_instance->filter, val);
 		switch (ppg_instance->state) {
 			case PPG_WAITING:
-				if (HAL_GetTick() - ppg_instance->last_beat < 250) return;
+				if (HAL_GetTick() - ppg_instance->last_beat < 300) return;
 				float voltage_delta = ppg_instance->filter.filtered_data[ppg_instance->filter.idx-1]/4095.0f*3.3 - ppg_instance->filter.filtered_data[(ppg_instance->filter.idx-4-1+MAX_SAMPLES)%MAX_SAMPLES]/4095.0f*3.3; //same as checking slope since we look for fixed period. need to check for 20 mV voltage delta in 10ms gap
-				if (voltage_delta < -0.02) {
+				if (voltage_delta < -0.02) { // original -0.02
 					ppg_instance->state = PPG_SEARCHING;
 				}
 				break;
