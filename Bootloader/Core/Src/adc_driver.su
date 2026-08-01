@@ -1,0 +1,4 @@
+../Core/Src/adc_driver.c:23:6:adc_driver_init	24	static
+../Core/Src/adc_driver.c:34:6:HAL_ADC_ConvCpltCallback	16	static
+../Core/Src/adc_driver.c:46:6:adc_driver_resume_adc	8	static
+../Core/Src/adc_driver.c:50:6:adc_driver_pause_adc	8	static

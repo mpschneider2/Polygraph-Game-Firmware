@@ -1,0 +1,16 @@
+../Core/Inc/gc9a01a.h:188:20:GC9A01A_set_spi_datasize	24	static
+../Core/Inc/gc9a01a.h:217:20:GC9A01A_start_spi_transaction	16	static
+../Core/Inc/gc9a01a.h:221:20:GC9A01A_end_spi_transaction	16	static
+../Core/Inc/gc9a01a.h:225:20:GC9A01A_transmit_command	16	static
+../Core/Inc/gc9a01a.h:236:20:GC9A01A_transmit_data	24	static
+../Core/Src/gc9a01a.c:17:6:GC9A01A_init	32	static
+../Core/Src/gc9a01a.c:73:6:GC9A01A_configure_param	24	static
+../Core/Src/gc9a01a.c:86:6:GC9A01A_set_addr_window	32	static
+../Core/Src/gc9a01a.c:109:6:GC9A01A_draw_pixel	32	static
+../Core/Src/gc9a01a.c:120:6:GC9A01A_draw_pixels	40	static
+../Core/Src/gc9a01a.c:136:6:GC9A01A_draw_screen	24	static
+../Core/Src/gc9a01a.c:140:6:GC9A01A_fill_rect	80	dynamic
+../Core/Src/gc9a01a.c:179:6:GC9A01A_fill	24	static
+../Core/Src/gc9a01a.c:185:6:GC9A01A_drawFastHLine	304	static
+../Core/Src/gc9a01a.c:209:6:GC9A01A_drawFastVLine	304	static
+../Core/Src/gc9a01a.c:233:6:GC9A01A_Draw_Str	96	static

@@ -1,0 +1,5 @@
+../Core/Src/buttons.c:18:6:HAL_GPIO_EXTI_Callback	16	static
+../Core/Src/buttons.c:40:6:check_l_button_pressed	4	static
+../Core/Src/buttons.c:43:6:check_c_button_pressed	4	static
+../Core/Src/buttons.c:46:6:check_r_button_pressed	4	static
+../Core/Src/buttons.c:50:6:clearButtons	4	static

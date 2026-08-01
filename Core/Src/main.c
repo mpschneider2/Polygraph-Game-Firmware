@@ -28,6 +28,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "app_states.h"
+#include "flash_layout.h"
 
 /* USER CODE END Includes */
 
@@ -114,12 +115,17 @@ int main(void)
 
   /* USER CODE BEGIN Init */
 
+  SCB->VTOR = APP_START_ADDR;
+  __enable_irq();
+
   /* USER CODE END Init */
 
   /* Configure the system clock */
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
+
+  SCB->VTOR = APP_START_ADDR;
 
   /* USER CODE END SysInit */
 
