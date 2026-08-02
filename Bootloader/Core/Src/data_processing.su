@@ -12,5 +12,5 @@
 ../Core/Src/data_processing.c:187:7:data_processing_DTW	80	static
 ../Core/Src/data_processing.c:259:5:compare	16	static
 ../Core/Src/data_processing.c:263:10:median	16	static
-../Core/Src/data_processing.c:270:6:data_processing_clean_ibi	24	static
-../Core/Src/data_processing.c:290:9:data_processing_combined_score	32	static
+../Core/Src/data_processing.c:276:6:data_processing_clean_ibi	32	static
+../Core/Src/data_processing.c:296:9:data_processing_combined_score	32	static
