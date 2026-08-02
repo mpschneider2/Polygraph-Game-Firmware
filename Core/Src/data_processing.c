@@ -11,6 +11,8 @@
 #include <string.h>
 #include <math.h>
 #include "fatfs.h"
+#include "game_constants.h"
+#include <stdbool.h>
 
 double data_processing_calc_mean(const float * arr, uint16_t n) {
 	if (n == 0) return 0.0f; // handle empty array case
@@ -252,4 +254,41 @@ float data_processing_DTW(const float * arr_a, const float * arr_b, uint16_t a_n
 	return cost_r2[x-1]; // return final calculated cost
 
 
+}
+
+int compare(const void * a, const void * b) {
+	return (*((int *)a)-*((int *)b));
+}
+
+uint16_t median(uint16_t * ibis, uint16_t n) {
+	static uint16_t arr_cpy[BUFFER_LENGTH]; //CAN ONLY RUN ONE INSTANCE OF MEDIAN AT ONCE; should be fine because driven by main loop, not state machine OR interrupt
+	memcpy(arr_cpy, ibis, n*sizeof(ibis[0])); // create copy of array
+	qsort(arr_cpy, n, sizeof(arr_cpy[0]), compare);
+	return arr_cpy[n/2];
+}
+
+void data_processing_clean_ibi(uint16_t * ibis, uint16_t n) { // clean in place?
+
+	static uint16_t ref;
+
+	for (int i = 0; i < n; i++) {
+		if (i == 0) {
+			ref = median(ibis, n); // not ideal, but easier than filtering through entire array and removing the values outside the bounds. This is most likely to land on a reasonable, in-bounds number. Can come back and add more robust processing later if this method proves to work.
+		} else {
+			ref = median(&ibis[max(0, i-REFWINDOW)], i-1); // don't include current potential outlier in median calculation!
+		}
+
+		bool outOfBounds = ibis[i] < LBOUND || ibis[i] > HBOUND;
+		bool deviates = abs(ibis[i]-ref) > HRV_PCTTHRESH*ref;
+
+		if (outOfBounds || deviates) {
+			ibis[i] = ref;
+		}
+	}
+}
+
+uint8_t data_processing_combined_score(float hrv_dtw_score, float gsr_dtw_score) { // outputs score of 0 to 100, higher being better
+	float comb_dtw_score = (0.5f*hrv_dtw_score + 0.5f*gsr_dtw_score); // alter weights as necessary
+	float comb_pct_score = (100.0f*exp(-1.0f/300.0f*comb_dtw_score));
+	return (uint8_t) comb_pct_score;
 }

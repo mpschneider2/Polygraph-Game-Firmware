@@ -31,5 +31,15 @@ float dist(float a, float b);
 
 float data_processing_DTW(const float * arr_a, const float * arr_b, uint16_t a_n, uint16_t b_n);
 
+void data_processing_clean_ibi(uint16_t * ibis, uint16_t n);
+//DEFINES FOR THAT FUNCTION
+
+#define REFWINDOW 5 // just for now, sample last 5 to find a filler value for IBI that's viable. This sort of messes up dynamic time warping
+	// but that's okay since it has a fairly wide window (for now). As seen in the MATLAB graphs, there is higher HRV correlation than GSR correlation, so can get away with wider
+	// bounds JUST for HRV maybe. Also may not be necessary once a shroud is implemented.
+#define LBOUND 300
+#define HBOUND 2000
+
+uint8_t data_processing_combined_score(float hrv_dtw_score, float gsr_dtw_score);
 
 #endif /* INC_DATA_PROCESSING_H_ */

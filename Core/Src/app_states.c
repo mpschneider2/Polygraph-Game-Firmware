@@ -227,15 +227,25 @@ void app_states_run() {
 					memset(hrv_a, 0, sizeof(hrv_a));
 					memset(hrv_b, 0, sizeof(hrv_b));
 
+					sd_util_log_d("Player_A_PPG_RAW", player_a_ppg.data, player_a_ppg.idx);
+					sd_util_log_d("Player_B_PPG_RAW", player_b_ppg.data, player_a_ppg.idx);
+
+					data_processing_clean_ibi(player_a_ppg.data, player_a_ppg.idx);
+					data_processing_clean_ibi(player_b_ppg.data, player_b_ppg.idx);
+
+					sd_util_log_d("Player_A_PPG_CLEAN", player_a_ppg.data, player_a_ppg.idx);
+					sd_util_log_d("Player_B_PPG_CLEAN", player_b_ppg.data, player_a_ppg.idx);
+
 					data_processing_calc_1hz_hrv(player_a_ppg.data, player_a_ppg.idx, hrv_a, &hrv_a_n);
 					data_processing_calc_1hz_hrv(player_b_ppg.data, player_b_ppg.idx, hrv_b, &hrv_b_n);
 
 
 					//INSERT SAVE TO uSD CARD HERE FOR LOGGING... but to save ram, will now modify in place
-					sd_util_log_d("Player_A_PPG_RAW", player_a_ppg.data, player_a_ppg.idx);
-					sd_util_log_d("Player_B_PPG_RAW", player_b_ppg.data, player_a_ppg.idx);
 					sd_util_log_f("Player_A_HRV_RAW", hrv_a, hrv_a_n);
 					sd_util_log_f("Player_B_HRV_RAW", hrv_b, hrv_b_n);
+
+					char msg_hrv_rg[25];
+					sprintf(msg_hrv_rg, "Higher HRV R: %c", ('A' + (data_processing_calc_stdev(hrv_a, hrv_a_n, NULL) < data_processing_calc_stdev(hrv_b, hrv_b_n, NULL))));
 
 					data_processing_normalize(hrv_a, NULL, hrv_a_n);
 					data_processing_normalize(hrv_b, NULL, hrv_b_n);
@@ -263,10 +273,8 @@ void app_states_run() {
 
 					GC9A01A_fill(&tft1, BG_PRIMARY);
 
-
-					char msg_hrv_rg[25];
 					char msg_gsr_rg[25];
-					sprintf(msg_hrv_rg, "Higher HRV R: %c", ('A' + (data_processing_calc_stdev(hrv_a, hrv_a_n, NULL) < data_processing_calc_stdev(hrv_a, hrv_b_n, NULL))));
+
 					sprintf(msg_gsr_rg, "Higher GSR R: %c", ('A' + (data_processing_calc_stdev_d(player_a_gsr.data, player_a_gsr.idx, NULL) < data_processing_calc_stdev_d(player_b_gsr.data, player_b_gsr.idx, NULL))));
 
 					char msg_hrv_dtw[25];
@@ -280,8 +288,13 @@ void app_states_run() {
 					GC9A01A_Draw_Str(msg_hrv_dtw, &tft1, 8, 100, u8g2_font_logisoso16_tr, TEXT_PRIMARY, BG_PRIMARY, 0);
 					GC9A01A_Draw_Str(msg_gsr_dtw, &tft1, 8, 120, u8g2_font_logisoso16_tr, TEXT_PRIMARY, BG_PRIMARY, 0);
 
-					char final_score_formatted[100];
-					sprintf(final_score_formatted, "%s\n%s\n%s\n%s", msg_hrv_rg, msg_gsr_rg, msg_hrv_dtw, msg_gsr_dtw);
+					char msg_pct_score[25];
+					sprintf(msg_pct_score, "Match: %d %%", data_processing_combined_score(hrv_dtw, gsr_dtw));
+					GC9A01A_Draw_Str(msg_pct_score, &tft1, 40, 140, u8g2_font_logisoso16_tr, TEXT_PRIMARY, BG_PRIMARY, 0);
+
+					char final_score_formatted[125];
+
+					sprintf(final_score_formatted, "%s\n%s\n%s\n%s\n%s", msg_hrv_rg, msg_gsr_rg, msg_hrv_dtw, msg_gsr_dtw, msg_pct_score);
 					sd_util_log_str("finalscores", final_score_formatted);
 
 				}
