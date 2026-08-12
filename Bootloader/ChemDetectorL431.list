@@ -9075,7 +9075,7 @@ void ppg_processor_run(ppg_instance_t * ppg_instance, uint16_t val) {
  800c7b0:	f7fc fa1a 	bl	8008be8 <__aeabi_d2f>
  800c7b4:	4603      	mov	r3, r0
  800c7b6:	60fb      	str	r3, [r7, #12]
-				if (voltage_delta < -0.02) { // original -0.02
+				if (voltage_delta < -0.005) { // original -0.02
  800c7b8:	68f8      	ldr	r0, [r7, #12]
  800c7ba:	f7fb fec5 	bl	8008548 <__aeabi_f2d>
  800c7be:	a38a      	add	r3, pc, #552	@ (adr r3, 800c9e8 <ppg_processor_run+0x328>)
@@ -9329,7 +9329,7 @@ void ppg_processor_run(ppg_instance_t * ppg_instance, uint16_t val) {
  800c9e0:	66666666 	.word	0x66666666
  800c9e4:	400a6666 	.word	0x400a6666
  800c9e8:	47ae147b 	.word	0x47ae147b
- 800c9ec:	bf947ae1 	.word	0xbf947ae1
+ 800c9ec:	bf747ae1 	.word	0xbf747ae1
  800c9f0:	457ff000 	.word	0x457ff000
  800c9f4:	0801c4f0 	.word	0x0801c4f0
  800c9f8:	40040000 	.word	0x40040000
